@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import { getAuthData } from '@/utils/auth';
+import { BASE_URL } from '@/app/(auth)/login/page';
 
 export type ProjectType = 'PERSONAL' | 'WORK';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 export default function NewProjectPage() {
   const router = useRouter();
@@ -40,7 +40,7 @@ export default function NewProjectPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/projects`, {
+      const response = await fetch(`${BASE_URL}/projects`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

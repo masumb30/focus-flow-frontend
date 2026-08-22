@@ -2,6 +2,7 @@
 
 import { useState, useEffect, FormEvent } from 'react';
 import { getAuthData } from '@/utils/auth';
+import { BASE_URL } from '@/app/(auth)/login/page';
 
 export interface Todo {
   id: string;
@@ -35,7 +36,7 @@ export default function TodosPage() {
     }
 
     try {
-      const response = await fetch('http://localhost:4000/todos', {
+      const response = await fetch(`${BASE_URL}/todos`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +77,7 @@ export default function TodosPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('http://localhost:4000/todos', {
+      const response = await fetch(`${BASE_URL}/todos`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +114,7 @@ export default function TodosPage() {
     );
 
     try {
-      const response = await fetch(`http://localhost:4000/todos/${id}`, {
+      const response = await fetch(`${BASE_URL}/todos/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

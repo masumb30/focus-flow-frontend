@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getAuthData, DecodedUser } from '@/utils/auth';
+import { BASE_URL } from '@/app/(auth)/login/page';
 
 export default function Header() {
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function Header() {
 
     try {
       // Step 1: Send request to backend to clear the HTTP-Only cookie
-      const response = await fetch(`http://localhost:4000/logout`, {
+      const response = await fetch(`${BASE_URL}/auth/logout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

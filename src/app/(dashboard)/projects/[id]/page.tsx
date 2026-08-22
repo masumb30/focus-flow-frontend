@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import { getAuthData } from '@/utils/auth';
+import { BASE_URL } from '@/app/(auth)/login/page';
 
 // --- Type Definitions matching Prisma Schema & API ---
 export type ProjectType = 'PERSONAL' | 'WORK';
@@ -47,7 +48,6 @@ export interface ProjectDetail {
   updatedAt: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -79,7 +79,7 @@ export default function ProjectDetailPage() {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
+      const response = await fetch(`${BASE_URL}/projects/${projectId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -141,7 +141,7 @@ export default function ProjectDetailPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/projects/${projectId}/tasks`, {
+      const response = await fetch(`${BASE_URL}/projects/${projectId}/tasks`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

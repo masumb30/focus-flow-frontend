@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import { getAuthData } from '@/utils/auth';
+import { BASE_URL } from '@/app/(auth)/login/page';
 
 // --- Types matching Prisma Schema & API Response ---
 export type ProjectType = 'PERSONAL' | 'WORK';
@@ -28,7 +29,6 @@ export interface Project {
   updatedAt: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -48,7 +48,7 @@ export default function ProjectsPage() {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/projects`, {
+      const response = await fetch(`${BASE_URL}/projects`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

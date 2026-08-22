@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast, ToastContainer } from 'react-toastify';
+import { BASE_URL } from '../login/page';
 
 // Mock credentials dataset for autofill feature
 const MOCK_SIGNUP_USERS = [
@@ -63,7 +64,6 @@ const MOCK_SIGNUP_USERS = [
   },
 ];
 
-const BASE_URL = 'http://localhost:4000';
 
 export default function Signup() {
   const router = useRouter();
