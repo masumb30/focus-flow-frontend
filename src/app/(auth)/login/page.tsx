@@ -63,7 +63,10 @@ const MOCK_LOGIN_USERS = [
   },
 ];
 
-export const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.API_URL : process.env.LOCALHOST_API_URL;
+export const BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_API_URL
+    : process.env.NEXT_PUBLIC_LOCALHOST_API_URL;
 
 export default function Login() {
   const router = useRouter();
