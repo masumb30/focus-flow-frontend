@@ -20,7 +20,7 @@ export function proxy(request: NextRequest) {
 export const config = {
     // Target all sub-routes of /dashboard and /createpost
     matcher: [
-        // "/dashboard/:path*", 
-        // "/createpost"
+        "/dashboard/:path*", 
+        "/createpost"
     ], 
 };

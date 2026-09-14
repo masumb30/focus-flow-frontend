@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast, ToastContainer } from 'react-toastify';
 import { BASE_URL } from '../login/page';
+import { API_BASE_URL } from '@/app/lib/config';
 
 // Mock credentials dataset for autofill feature
 const MOCK_SIGNUP_USERS = [
@@ -97,7 +98,7 @@ export default function Signup() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${BASE_URL}/auth/signup`, {
+      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

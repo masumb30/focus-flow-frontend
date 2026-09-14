@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'motion/react';
@@ -51,16 +51,26 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export default function Sidebar() {
+    const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  useEffect(() => {
+  const check = () => setIsMobile(window.innerWidth < 768);
+  check();
+  window.addEventListener('resize', check);
+  return () => window.removeEventListener('resize', check);
+}, []);
+
+const collapsed = isMobile || isCollapsed;
 
   return (
-    <motion.aside 
-      initial={false}
-      animate={{ width: isCollapsed ? '80px' : '256px' }}
-      transition={{ duration: 0.25, ease: 'easeInOut' }}
-      className="sticky top-16 flex h-[calc(100vh-4rem)] flex-col justify-between border-r border-slate-200/80 bg-white p-3 dark:border-slate-800/80 dark:bg-slate-900 md:p-4 overflow-hidden shrink-0"
-    >
+        
+    <motion.aside
+  initial={false}
+  className={`sticky top-16 flex h-[calc(100vh-4rem)] flex-col justify-between border-r border-slate-200/80 bg-white p-3 dark:border-slate-800/80 dark:bg-slate-900 md:p-4 overflow-hidden shrink-0 transition-[width] duration-250 ease-in-out ${
+    isCollapsed ? 'w-[80px]' : 'w-[80px] md:w-[256px]'
+  }`}
+>
       {/* Upper Navigation Links */}
       <div className="space-y-6">
         {/* Header with Overview label and Toggle Button */}
@@ -75,7 +85,7 @@ export default function Sidebar() {
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             aria-label={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-            className={` rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors focus:outline-none cursor-pointer ${isCollapsed ? 'mx-auto' : ''}`}
+            className={`hidden md:block rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors focus:outline-none cursor-pointer ${isCollapsed ? 'mx-auto' : ''}`}
           >
             <svg 
               className={`h-4 w-4 transition-transform duration-300 ${isCollapsed ? 'rotate-180' : 'rotate-0'}`} 
@@ -116,13 +126,13 @@ export default function Sidebar() {
                 />
                 
                 {/* Text Label - Fades out nicely when collapsed */}
-                <motion.span 
-                  animate={{ opacity: isCollapsed ? 0 : 1 }}
-                  transition={{ duration: 0.15}}
-                  className="whitespace-nowrap overflow-hidden "
-                >
-                  {item.name}
-                </motion.span>
+                <motion.span
+  animate={{ opacity: collapsed ? 0 : 1 }}
+  transition={{ duration: 0.15 }}
+  className="whitespace-nowrap overflow-hidden hidden md:inline"
+>
+  {item.name}
+</motion.span>
 
                 {/* Active Indicator Dot */}
                 {isActive && !isCollapsed && (
@@ -153,4 +163,5 @@ export default function Sidebar() {
       </div>
     </motion.aside>
   );
-}
+
+    }

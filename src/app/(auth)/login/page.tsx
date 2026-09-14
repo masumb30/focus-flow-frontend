@@ -114,18 +114,11 @@ export default function Login() {
       if (!response.ok || !data.success) {
         throw new Error(data.message || 'Authentication failed. Please check your credentials.');
       }
-
-      // Store JWT token and user info for client-side access
-      if (data.token) {
-        localStorage.setItem('token', data.token);
-      }
-      if (data.user) {
-        localStorage.setItem('user', JSON.stringify(data.user));
-      }
-      window.dispatchEvent(new Event('auth-change'));
-
+      
       toast.success(data.message || 'Welcome back!');
-      router.push('/dashboard');
+      window.location.href = '/dashboard';
+
+      
     } catch (error: any) {
       toast.error(error.message || 'Something went wrong. Please try again.');
     } finally {

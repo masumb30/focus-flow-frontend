@@ -4,32 +4,31 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getAuthData, DecodedUser } from '@/utils/auth';
-import { BASE_URL } from '@/app/(auth)/login/page';
+import { API_BASE_URL } from '@/app/lib/config';
 
-export default function Header() {
+export default function Header({user}: {user: DecodedUser | null}) {
   const router = useRouter();
-  const [user, setUser] = useState<DecodedUser | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Sync auth state on initial mount & window focus
-  useEffect(() => {
-    const checkAuth = () => {
-      const { isAuthenticated, user: decodedUser } = getAuthData();
-      setIsLoggedIn(isAuthenticated);
-      setUser(decodedUser);
-    };
+  // useEffect(() => {
+  //   const checkAuth = () => {
+  //     const { isAuthenticated, user: decodedUser } = getAuthData();
+  //     setIsLoggedIn(isAuthenticated);
+  //     setUser(decodedUser);
+  //   };
 
-    checkAuth();
-    window.addEventListener('auth-change', checkAuth);
-    window.addEventListener('focus', checkAuth);
+  //   checkAuth();
+  //   window.addEventListener('auth-change', checkAuth);
+  //   window.addEventListener('focus', checkAuth);
 
-    return () => {
-      window.removeEventListener('auth-change', checkAuth);
-      window.removeEventListener('focus', checkAuth);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('auth-change', checkAuth);
+  //     window.removeEventListener('focus', checkAuth);
+  //   };
+  // }, []);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -53,47 +52,51 @@ export default function Header() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogout = async () => {
-    setIsLoading(true);
+  // const handleLogout = async () => {
+  //   setIsLoading(true);
 
-    try {
-      // Step 1: Send request to backend to clear the HTTP-Only cookie
-      const response = await fetch(`${BASE_URL}/auth/logout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', // CRITICAL: Passes current cookies to backend
-      });
+  //   try {
+  //     // Step 1: Send request to backend to clear the HTTP-Only cookie
+  //     const response = await fetch(`${BASE_URL}/auth/logout`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       credentials: 'include', // CRITICAL: Passes current cookies to backend
+  //     });
 
-      if (!response.ok) {
-        console.warn('Server cookie clearance failed, cleaning local storage regardless.');
-      }
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      // Step 2: Clear client-side storage items
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      setIsLoggedIn(false);
-      window.dispatchEvent(new Event('auth-change'));
-
-      // Step 3: Redirect to login page and refresh Server Components
-      router.push('/login');
-      router.refresh();
-      setIsLoading(false);
-    }
-  };
-  // Sign out handler
-  //   const handleSignOut = () => {
+  //     if (!response.ok) {
+  //       console.warn('Server cookie clearance failed, cleaning local storage regardless.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Logout error:', error);
+  //   } finally {
+  //     // Step 2: Clear client-side storage items
   //     localStorage.removeItem('token');
   //     localStorage.removeItem('user');
   //     setIsLoggedIn(false);
-  //     setUser(null);
-  //     setIsDropdownOpen(false);
-  //     router.push('/login');
-  //   };
+  //     window.dispatchEvent(new Event('auth-change'));
 
+  //     // Step 3: Redirect to login page and refresh Server Components
+  //     router.push('/login');
+  //     router.refresh();
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  const handleLogout = async () => {
+    try {
+      // 1. Call backend to clear the HttpOnly cookie
+      await fetch(`${API_BASE_URL}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include', // Passes current cookies to backend
+      });
+
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+  };
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-md transition-colors duration-200 dark:border-slate-800/80 dark:bg-slate-950/80">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -116,7 +119,7 @@ export default function Header() {
         {/* Right: Actions / Auth State */}
         <div className="flex items-center gap-3 sm:gap-4">
 
-          {isLoggedIn && user ? (
+          { user ? (
             /* Logged In: User Avatar & Dropdown */
             <div className="relative" ref={dropdownRef}>
               <button
