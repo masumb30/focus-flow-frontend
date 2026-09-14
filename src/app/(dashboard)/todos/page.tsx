@@ -137,7 +137,7 @@ export default function TodosPage() {
   const completedTodos = todos?.filter((t) => t.status === 'completed');
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-8 dark:bg-slate-950 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 ">
       <div className="mx-auto max-w-5xl space-y-8">
         
         {/* Header */}

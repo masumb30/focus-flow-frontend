@@ -123,7 +123,7 @@ export default function ProjectsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 sm:p-6 lg:p-8 dark:bg-slate-950 transition-colors duration-200">
+    <div className="min-h-screen bg-slate-50  dark:bg-slate-950 transition-colors duration-200">
       <div className="mx-auto max-w-7xl space-y-6">
         
         {/* --- Header Section --- */}

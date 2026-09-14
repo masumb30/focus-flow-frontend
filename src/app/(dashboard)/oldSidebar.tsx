@@ -1,9 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion } from 'motion/react';
 
 interface NavItem {
   name: string;
@@ -52,41 +50,14 @@ const NAV_ITEMS: NavItem[] = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <motion.aside 
-      initial={false}
-      animate={{ width: isCollapsed ? '80px' : '256px' }}
-      transition={{ duration: 0.25, ease: 'easeInOut' }}
-      className="sticky top-16 flex h-[calc(100vh-4rem)] flex-col justify-between border-r border-slate-200/80 bg-white p-3 dark:border-slate-800/80 dark:bg-slate-900 md:p-4 overflow-hidden shrink-0"
-    >
+    <aside className="sticky top-16 flex h-[calc(100vh-4rem)] w-16 flex-col justify-between border-r border-slate-200/80 bg-white p-3 transition-all duration-300 dark:border-slate-800/80 dark:bg-slate-900 md:w-64 md:p-4">
       {/* Upper Navigation Links */}
       <div className="space-y-6">
-        {/* Header with Overview label and Toggle Button */}
-        <div className="flex items-center justify-between px-3">
-          <motion.span 
-            animate={{ opacity: isCollapsed ? 0 : 1 }}
-            transition={{ duration: 0.15 }}
-            className={`text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 whitespace-nowrap ${isCollapsed ? 'hidden' : ''}`}
-          >
-            Overview
-          </motion.span>
-          <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            aria-label={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-            className={` rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors focus:outline-none cursor-pointer ${isCollapsed ? 'mx-auto' : ''}`}
-          >
-            <svg 
-              className={`h-4 w-4 transition-transform duration-300 ${isCollapsed ? 'rotate-180' : 'rotate-0'}`} 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor" 
-              strokeWidth="2"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-            </svg>
-          </button>
+        {/* Navigation Label (Hidden on small screens) */}
+        <div className="hidden px-3 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 md:block">
+          Overview
         </div>
 
         <nav className="space-y-1.5">
@@ -98,10 +69,8 @@ export default function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                title={item.name}
-                className={`group flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 focus:outline-none gap-3 
-                    
-                ${
+                title={item.name} // Native tooltip when icon-only on mobile
+                className={`group flex items-center justify-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 md:justify-start md:gap-3 ${
                   isActive
                     ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400'
                     : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/60 dark:hover:text-slate-200'
@@ -115,18 +84,12 @@ export default function Sidebar() {
                   }`}
                 />
                 
-                {/* Text Label - Fades out nicely when collapsed */}
-                <motion.span 
-                  animate={{ opacity: isCollapsed ? 0 : 1 }}
-                  transition={{ duration: 0.15}}
-                  className="whitespace-nowrap overflow-hidden "
-                >
-                  {item.name}
-                </motion.span>
+                {/* Text Label - Hidden on small screens, visible on md+ */}
+                <span className="hidden truncate md:inline">{item.name}</span>
 
-                {/* Active Indicator Dot */}
-                {isActive && !isCollapsed && (
-                  <span className="ml-auto h-2 w-2 rounded-full bg-indigo-600 dark:bg-indigo-400" />
+                {/* Active Indicator Dot (Desktop only) */}
+                {isActive && (
+                  <span className="ml-auto hidden h-2 w-2 rounded-full bg-indigo-600 dark:bg-indigo-400 md:block" />
                 )}
               </Link>
             );
@@ -136,21 +99,17 @@ export default function Sidebar() {
 
       {/* Quick Profile / Status Footer at the bottom */}
       <div className="border-t border-slate-200/80 pt-3 dark:border-slate-800/80">
-        <div className={`flex items-center rounded-xl p-2 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/60 ${isCollapsed ? 'justify-center' : 'justify-start gap-3'}`}>
+        <div className="flex items-center justify-center rounded-xl p-2 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/60 md:justify-start md:gap-3">
           <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white shadow-sm">
             JD
             <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900" />
           </div>
-          <motion.div 
-            animate={{ opacity: isCollapsed ? 0 : 1, display: isCollapsed ? 'none' : 'block' }}
-            transition={{ duration: 0.15 }}
-            className="min-w-0 flex-1 overflow-hidden"
-          >
+          <div className="hidden min-w-0 flex-1 md:block">
             <p className="truncate text-xs font-semibold text-slate-900 dark:text-slate-100">Jane Doe</p>
             <p className="truncate text-[11px] text-slate-500 dark:text-slate-400">Pro Member</p>
-          </motion.div>
+          </div>
         </div>
       </div>
-    </motion.aside>
+    </aside>
   );
 }
